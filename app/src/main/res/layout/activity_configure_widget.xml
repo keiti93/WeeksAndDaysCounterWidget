@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:text="Name:"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="1dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:hint="Enter name" />
+
+            <Button
+                android:id="@+id/btn_color_picker_name"
+                android:layout_marginStart="8dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/circle_button"
+                android:text=""
+                android:padding="0dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/darker_gray"/>
+
+        <!-- Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date:"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginTop="14dp"/>
+
+        <!-- Horizontal Layout for Date Input + Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/edit_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:clickable="true"
+                android:textColor="#000000"
+                android:hint="Select date"
+                android:padding="12dp"/>
+
+            <Button
+                android:id="@+id/btn_color_picker_date"
+                android:layout_marginStart="8dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/circle_button"
+                android:text=""
+                android:padding="0dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/darker_gray"/>
+        <!-- Ready Button -->
+        <Button
+            android:id="@+id/btn_ready"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:radius="10dp"
+            android:textColor="#000000"
+            android:text="Done!"
+            android:background="#B2FFFF"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="10dp" />
+    </LinearLayout>
+</ScrollView>
