@@ -12,7 +12,7 @@ import android.widget.RemoteViews;
 
 import java.util.Calendar;
 
-public class HelloWidgetProvider extends AppWidgetProvider {
+public class CounterWidgetProvider extends AppWidgetProvider {
 
     public static final String PREFS_NAME = "HelloWidgetPrefs";
 
@@ -37,7 +37,7 @@ public class HelloWidgetProvider extends AppWidgetProvider {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context, 0,
-                new Intent(context, HelloWidgetProvider.class).setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE),
+                new Intent(context, CounterWidgetProvider.class).setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE),
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         alarmManager.cancel(pendingIntent);
@@ -53,13 +53,13 @@ public class HelloWidgetProvider extends AppWidgetProvider {
         midnight.set(Calendar.MILLISECOND, 0);
 
 
-        Intent intent = new Intent(context, HelloWidgetProvider.class);
+        Intent intent = new Intent(context, CounterWidgetProvider.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
         // We need to pass all widget IDs so they get updated
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] widgetIds = appWidgetManager.getAppWidgetIds(
-                new android.content.ComponentName(context, HelloWidgetProvider.class)
+                new android.content.ComponentName(context, CounterWidgetProvider.class)
         );
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
 
@@ -113,7 +113,7 @@ public class HelloWidgetProvider extends AppWidgetProvider {
             }
         }
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_hello);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
         views.setTextViewText(R.id.widget_text_name, name);
         views.setTextViewText(R.id.widget_text_counter, weeksAndDays);
         views.setTextColor(R.id.widget_text_name, Color.parseColor(color));

@@ -50,7 +50,7 @@ public class WidgetConfigureActivity extends Activity {
         if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) finish();
 
         // Load previously saved values
-        SharedPreferences prefs = getSharedPreferences(HelloWidgetProvider.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(CounterWidgetProvider.PREFS_NAME, MODE_PRIVATE);
         String savedName = prefs.getString("name_" + widgetId, "");
         String savedDate = prefs.getString("date_" + widgetId, "");
         String savedColorStr = prefs.getString("color_" + widgetId, "#FFD740");
@@ -122,7 +122,7 @@ public class WidgetConfigureActivity extends Activity {
             String colorHex = String.format("#%06X", (0xFFFFFF & selectedColourName));
             String colorDateHex = String.format("#%06X", (0xFFFFFF & selectedColourDate));
 
-            SharedPreferences.Editor editor = getSharedPreferences(HelloWidgetProvider.PREFS_NAME, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(CounterWidgetProvider.PREFS_NAME, MODE_PRIVATE).edit();
             editor.putString("name_" + widgetId, name)
                     .putString("color_" + widgetId, colorHex)
                     .putString("date_" + widgetId, dateStr)
@@ -130,7 +130,7 @@ public class WidgetConfigureActivity extends Activity {
                     .apply();
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-            HelloWidgetProvider.updateWidget(this, appWidgetManager, widgetId);
+            CounterWidgetProvider.updateWidget(this, appWidgetManager, widgetId);
 
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
