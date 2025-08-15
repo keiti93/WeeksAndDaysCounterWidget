@@ -19,8 +19,7 @@ public class WidgetConfigureActivity extends Activity {
     int widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     EditText nameInput;
     EditText dateEditText;
-    Button colorButton; // replace RadioGroup with a Button
-
+    Button colorButton;
     Button colorButtonDate;
     Button btnReady;
 

@@ -4,10 +4,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
@@ -43,15 +45,39 @@ public class CounterWidgetProvider extends AppWidgetProvider {
         alarmManager.cancel(pendingIntent);
     }
 
+    // NEW: handle system time/date changes as a reliable fallback
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        String action = intent.getAction();
+        if (Intent.ACTION_DATE_CHANGED.equals(action)
+                || Intent.ACTION_TIME_CHANGED.equals(action)
+                || Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
+            AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+            int[] ids = mgr.getAppWidgetIds(new ComponentName(context, CounterWidgetProvider.class));
+            if (ids != null && ids.length > 0) {
+                onUpdate(context, mgr, ids);
+            }
+        }
+    }
+
     private void scheduleNextUpdate(Context context) {
         Calendar midnight = Calendar.getInstance();
-        midnight.add(Calendar.DAY_OF_YEAR, 1);
-        midnight.set(Calendar.HOUR_OF_DAY, 0);
-        midnight.set(Calendar.MINUTE, 0);
+//        midnight.add(Calendar.DAY_OF_YEAR, 1);
+//        midnight.set(Calendar.HOUR_OF_DAY, 0);
+//        midnight.set(Calendar.MINUTE, 0);
+//
+//        midnight.set(Calendar.SECOND, 0);
+//        midnight.set(Calendar.MILLISECOND, 0);
 
+        // compute next midnight from "now"
         midnight.set(Calendar.SECOND, 0);
         midnight.set(Calendar.MILLISECOND, 0);
-
+        midnight.set(Calendar.MINUTE, 0);
+        midnight.set(Calendar.HOUR_OF_DAY, 0);
+        if (midnight.getTimeInMillis() <= System.currentTimeMillis()) {
+            midnight.add(Calendar.DAY_OF_YEAR, 1);
+        }
 
         Intent intent = new Intent(context, CounterWidgetProvider.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -69,7 +95,37 @@ public class CounterWidgetProvider extends AppWidgetProvider {
         );
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, midnight.getTimeInMillis(), pendingIntent);
+        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, midnight.getTimeInMillis(), pendingIntent);
+
+        // ANDROID 12+ handling: if exact alarms are not allowed, fallback to inexact repeating
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // API 31
+            if (!alarmManager.canScheduleExactAlarms()) {
+                // fallback: approximate daily refresh around midnight
+                alarmManager.setInexactRepeating(
+                        AlarmManager.RTC_WAKEUP,
+                        midnight.getTimeInMillis(),
+                        AlarmManager.INTERVAL_DAY,
+                        pendingIntent
+                );
+                return;
+            }
+        }
+
+        // exact alarm (preferred)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    midnight.getTimeInMillis(),
+                    pendingIntent
+            );
+        } else {
+            alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    midnight.getTimeInMillis(),
+                    pendingIntent
+            );
+        }
+
     }
 
     public static void updateWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
